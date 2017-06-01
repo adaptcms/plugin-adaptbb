@@ -4,7 +4,6 @@ namespace App\Modules\Adaptbb\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Redis;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -17,12 +16,13 @@ use App\Modules\Core\Services\Core;
 use Auth;
 use Validator;
 use Theme;
+use Cache;
 
 class TopicsController extends Controller
 {
     public function view($forum_slug, $topic_slug)
     {
-        $theme = Theme::uses(Redis::get('config.theme'))->layout('front');
+        $theme = Theme::uses(Cache::get('theme', 'default'))->layout('front');
 
         $forum = Forum::where('slug', '=', $forum_slug)->first();
         $topic = Topic::where('forum_id', '=', $forum->id)->where('slug', '=', $topic_slug)->first();
@@ -43,7 +43,7 @@ class TopicsController extends Controller
 
     public function add(Request $request, $forum_slug)
     {
-        $theme = Theme::uses(Redis::get('config.theme'))->layout('front');
+        $theme = Theme::uses(Cache::get('theme', 'default'))->layout('front');
 
         $forum = Forum::where('slug', '=', $forum_slug)->first();
 

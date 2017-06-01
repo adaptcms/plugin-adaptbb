@@ -3,7 +3,6 @@
 namespace App\Modules\Adaptbb\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -12,12 +11,13 @@ use App\Modules\Adaptbb\Models\Forum;
 use App\Modules\Adaptbb\Models\Topic;
 
 use Theme;
+use Cache;
 
 class ForumsController extends Controller
 {
     public function index()
     {
-        $theme = Theme::uses(Redis::get('config.theme'))->layout('front');
+        $theme = Theme::uses(Cache::get('theme', 'default'))->layout('front');
 
         $forum = new Forum;
         $forums = $forum->getIndex();
@@ -29,7 +29,7 @@ class ForumsController extends Controller
 
     public function view($slug)
     {
-        $theme = Theme::uses(Redis::get('config.theme'))->layout('front');
+        $theme = Theme::uses(Cache::get('theme', 'default'))->layout('front');
 
         $forum = Forum::where('slug', '=', $slug)->first();
         $topics = Topic::where('forum_id', '=', $forum->id)->paginate(15);

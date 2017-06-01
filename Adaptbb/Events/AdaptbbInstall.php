@@ -1,15 +1,14 @@
 <?php
 namespace App\Modules\Adaptbb\Events;
 
-use Illuminate\Support\Facades\Redis;
-
 use Storage;
+use Cache;
 
 class AdaptbbInstall
 {
     public function __construct()
 	{
-        $theme = Redis::get('config.theme');
+        $theme = Cache::get('theme', 'default');
 
         $origViewsPath = 'Adaptbb/Resources/Views/';
         $newViewsPath = $theme . '/views/adaptbb/';
